@@ -36,32 +36,49 @@ class Person:
         self.connection.commit()
         self.connection.close()
 
-connection = sqlite3.connect('mydata.db')
-cursor = connection.cursor()
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS persons (
-    id INTEGER PRIMARY KEY,
-    first_name TEXT,
-    last_name TEXT,
-    age INTEGER
-)
-""")
-connection.commit()
-connection.close()
+
+def find_name_by_id(id_num):
+    connection = sqlite3.connect('mydata.db')
+    cursor = connection.cursor()
+    p2 = Person()
+    p2.load_person(id_num)
+    name = p2.first
+    return name
+
+def main():
+    connection = sqlite3.connect('mydata.db')
+    cursor = connection.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS persons (
+        id INTEGER PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        age INTEGER
+    )
+    """)
+    connection.commit()
+    connection.close()
 
 
-fname = input("Enter your first name: ")
-lname = input("Enter your last name: ")
-age = int(input("Enter your age: "))
-num = int(input("Enter an id number: "))
-p1 = Person(num, fname, lname, age)
-p1.insert_person()
+    fname = input("Enter your first name: ")
+    lname = input("Enter your last name: ")
+    age = int(input("Enter your age: "))
+    num = int(input("Enter an id number: "))
+    p1 = Person(num, fname, lname, age)
+    p1.insert_person()
 
-connection = sqlite3.connect('mydata.db')
-cursor = connection.cursor()
+    connection = sqlite3.connect('mydata.db')
+    cursor = connection.cursor()
 
-cursor.execute("SELECT * FROM persons")
-results = cursor.fetchall()
-print(results)
+    cursor.execute("SELECT * FROM persons")
+    results = cursor.fetchall()
+    print(results)
 
-connection.close()
+    id_search = input("Enter ID to search for: ")
+    ffname = find_name_by_id(id_search)
+    print(f"That's {ffname}'s ID")
+
+
+    connection.close()
+
+#main()
